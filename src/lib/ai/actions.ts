@@ -719,3 +719,35 @@ Respond with a JSON object adhering to this schema:
     }
   }
 }
+
+// ─────────────────────────────────────────────────────────────
+// USE CASE F: EXPLAIN WITH PRUNE (PHASE 3 WHAT-IF NARRATION)
+// ─────────────────────────────────────────────────────────────
+
+import {
+  explainWithPrune,
+  type ScenarioData,
+  type PruneExplanationResult,
+} from './prune'
+
+export async function explainWithPruneAction(
+  scenario: ScenarioData
+): Promise<AIResult<PruneExplanationResult>> {
+  try {
+    const result = await explainWithPrune(scenario)
+    return {
+      success: true,
+      data: result,
+      isAiAssisted: result.isAiGenerated,
+      model: result.isAiGenerated ? (process.env.PRUNE_MODEL || 'gpt-4o-mini') : 'deterministic-template',
+      timestamp: new Date().toISOString(),
+    }
+  } catch (err: unknown) {
+    return {
+      success: false,
+      error: 'AI_PROVIDER_ERROR',
+      message: err instanceof Error ? err.message : 'Failed to generate scenario explanation.',
+      isAiAssisted: false,
+    }
+  }
+}

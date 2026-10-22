@@ -24,6 +24,7 @@ import {
 import type { FitScore, FitScoreCriterion, Competitor, StartupProfile } from '@/types/database'
 import { fitScoreColor, fitScoreLabel, SCORING_MODEL_VERSION } from '@/lib/scoring/fitScore'
 import { AICompetitorExtractorModal } from '@/components/ai/AICompetitorExtractorModal'
+import { SensitivityDecisionAids } from '@/components/scoring/SensitivityDecisionAids'
 
 interface PageProps {
   params: Promise<{ id: string }>
@@ -116,6 +117,21 @@ export default async function ComparisonDetailPage({ params }: PageProps) {
   const winnerFs = scoresMap.get(winnerCity)
   const hasWinnerValidScore = winnerFs && !winnerFs.insufficient_data && (winnerFs.total_score !== null)
   const winnerScore = hasWinnerValidScore ? winnerFs.total_score : 0
+
+  const candidateCitiesForSensitivity = cities.map((city) => {
+    const fs = scoresMap.get(city)
+    const critList = (fs?.criteria as unknown as FitScoreCriterion[]) || []
+    return {
+      name: city,
+      criteria: critList.map((c) => ({
+        name: c.name,
+        weight: c.weight,
+        score: c.score,
+        rationale: c.rationale,
+        is_available: !fs?.missing_criteria?.includes(c.name),
+      })),
+    }
+  })
 
   return (
     <PageShell>
@@ -395,6 +411,11 @@ export default async function ComparisonDetailPage({ params }: PageProps) {
           })}
         </div>
       </div>
+
+      {/* ─────────────────────────────────────────────────────────────
+          SENSITIVITY DECISION AIDS & WHAT-IF SIMULATION (PHASE 3)
+         ───────────────────────────────────────────────────────────── */}
+      <SensitivityDecisionAids initialCandidateCities={candidateCitiesForSensitivity} />
 
       {/* ─────────────────────────────────────────────────────────────
           SOURCED MARKET INDICATORS SIDE-BY-SIDE TABLE
