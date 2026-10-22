@@ -8,6 +8,9 @@ import { runMarketProofClassifierTests } from '../src/lib/scoring/__tests__/mark
 import { runAIProviderTests } from '../src/lib/ai/__tests__/aiProvider.test'
 import { runAIUseCasesTests } from '../src/lib/ai/__tests__/aiUseCases.test'
 import { runIntegrationJourneyTests } from '../src/lib/__tests__/integrationJourney.test'
+import { runSensitivityTests } from '../src/lib/scoring/__tests__/sensitivity.test'
+import { runPruneTests } from '../src/lib/ai/__tests__/prune.test'
+import { runBundleSecretCheck } from './check-bundle-secrets'
 import { runWeightsValidationTests } from '../src/lib/validations/__tests__/weights.test'
 import { runWhatIfRankingTests } from '../src/lib/scoring/__tests__/whatIfRanking.test'
 
@@ -19,6 +22,7 @@ async function main() {
   try {
     runStartupProfileValidationTests()
     runFitScoreTests()
+    runSensitivityTests()
     runLocalConnectMatchingTests()
     runIntroductionRequestValidationTests()
     runMarketValidationMetricsTests()
@@ -28,7 +32,9 @@ async function main() {
     runWhatIfRankingTests()
     await runAIProviderTests()
     await runAIUseCasesTests()
+    await runPruneTests()
     await runIntegrationJourneyTests()
+    runBundleSecretCheck()
     console.log('====================================================')
     console.log('  ALL TEST SUITES PASSED SUCCESSFULLY')
     console.log('====================================================\n')

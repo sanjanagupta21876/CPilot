@@ -1,0 +1,360 @@
+﻿=== Phase 3 Verification Suite ===
+Date: 2026-10-22
+
+--- 1. TypeScript Strict Type-Check (npm run type-check) ---
+
+> citypilot@0.1.0 type-check
+> tsc --noEmit
+
+
+--- 2. ESLint (npm run lint) ---
+
+> citypilot@0.1.0 lint
+> eslint
+
+
+--- 3. Git Diff Check (git diff --check) ---
+git diff --check completed cleanly (0 errors)
+
+--- 4. Full Unit, Integration, Sensitivity & Security Test Suite (npm test) ---
+
+> citypilot@0.1.0 test
+> npx tsx scripts/run-tests.ts
+
+
+--- Running Fit Score Engine Tests (Version: v1.0.0) ---
+  Γ£ô Scoring model version is v1.0.0
+  Γ£ô Identical inputs produce identical scores (Reproducibility)
+  Γ£ô Returned scoring model version is v1.0.0
+  Γ£ô Weighted score mathematically matches expected formula (76.75)
+  Γ£ô Full criteria set produces 100% evidence coverage
+  Γ£ô Full criteria set does not flag insufficient data
+  Γ£ô Weights clamped between 0 and 100 correctly
+  Γ£ô Missing criterion excluded from denominator instead of treated as 0
+  Γ£ô Missing criterion tracked in missing_criteria array
+  Γ£ô Evidence coverage correctly reports 80% (4 of 5 criteria)
+  Γ£ô 4 criteria and 80% weight remains sufficient data
+  Γ£ô Triggers insufficient_data when only 1 criterion is available
+  Γ£ô Returns null total_score when data is insufficient (no false confidence)
+  Γ£ô Evidence coverage correctly reports 20%
+  Γ£ô Entry Cost directionality: Lower commercial rent scores higher than expensive rent
+  Γ£ô Competitive Opportunity directionality: Emerging market has higher opportunity score than saturated incumbent market
+  Γ£ô Coverage percentage is 50%
+  Γ£ô Correct verified indicator count (1)
+  Γ£ô Correct simulated indicator count (1)
+  Γ£ô Simulated indicators are explicitly flagged in limitations
+
+Results: 20 passed, 0 failed.
+
+====================================================
+   CITY LAUNCHPAD ΓÇö COMPREHENSIVE TEST RUNNER
+====================================================
+
+--- Running Startup Profile Validation Tests ---
+  Γ£ô Valid full profile passes validation
+  Γ£ô Valid minimal profile with only required fields passes
+  Γ£ô Missing name fails validation
+  Γ£ô Short business description fails (<10 chars)
+  Γ£ô Missing current_city fails validation
+  Γ£ô Missing primary_channel fails validation
+  Γ£ô Invalid price range (min > max) fails validation
+  Γ£ô Negative price fails validation
+  Γ£ô Single price (only price_min) succeeds
+  Γ£ô Invalid website URL format fails
+  Γ£ô Empty website_url succeeds (treated as optional)
+  Γ£ô Candidate expansion cities array persists
+
+Results: 12 passed, 0 failed.
+
+
+--- Running Fit Score Engine Tests (Version: v1.0.0) ---
+  Γ£ô Scoring model version is v1.0.0
+  Γ£ô Identical inputs produce identical scores (Reproducibility)
+  Γ£ô Returned scoring model version is v1.0.0
+  Γ£ô Weighted score mathematically matches expected formula (76.75)
+  Γ£ô Full criteria set produces 100% evidence coverage
+  Γ£ô Full criteria set does not flag insufficient data
+  Γ£ô Weights clamped between 0 and 100 correctly
+  Γ£ô Missing criterion excluded from denominator instead of treated as 0
+  Γ£ô Missing criterion tracked in missing_criteria array
+  Γ£ô Evidence coverage correctly reports 80% (4 of 5 criteria)
+  Γ£ô 4 criteria and 80% weight remains sufficient data
+  Γ£ô Triggers insufficient_data when only 1 criterion is available
+  Γ£ô Returns null total_score when data is insufficient (no false confidence)
+  Γ£ô Evidence coverage correctly reports 20%
+  Γ£ô Entry Cost directionality: Lower commercial rent scores higher than expensive rent
+  Γ£ô Competitive Opportunity directionality: Emerging market has higher opportunity score than saturated incumbent market
+  Γ£ô Coverage percentage is 50%
+  Γ£ô Correct verified indicator count (1)
+  Γ£ô Correct simulated indicator count (1)
+  Γ£ô Simulated indicators are explicitly flagged in limitations
+
+Results: 20 passed, 0 failed.
+
+
+--- Running Sensitivity Decision Aids Tests (Phase 3) ---
+  Γ£ô Known hand-check: flip is possible
+  Γ£ô Known hand-check: Operating Cost is identified as flippable factor
+  Γ£ô Known hand-check: Threshold weight matches exact mathematical derivation (31%)
+  Γ£ô Known hand-check: Direction is increase
+  Γ£ô Known hand-check: City Beta strictly leads City Alpha at threshold (75.12 vs 74.88)
+  Γ£ô No-flip case: canFlip is false
+  Γ£ô No-flip case: exact required explanation string returned
+  Γ£ô No-flip case: flippableFactors is empty
+  Γ£ô Tied case: canFlip is false
+  Γ£ô Tied case: isTied is true
+  Γ£ô Tied case: explains tied status transparently without inventing a threshold
+  Γ£ô Insufficient data case: canFlip is false
+  Γ£ô Insufficient data case: insufficientData is true
+  Γ£ô Insufficient data case: explains lack of data rather than inventing a threshold
+  Γ£ô Missing factor is NEVER offered when unavailable in one or both cities
+  Γ£ô Boundary test 0%: F1 factor identified
+  Γ£ô Boundary test at lower end: threshold found exactly at boundary 0%
+  Γ£ô Boundary test 0%: direction is decrease
+  Γ£ô Boundary test 100%: F3 factor identified
+  Γ£ô Boundary test at upper end: threshold found exactly at boundary 100%
+  Γ£ô Boundary test 100%: direction is increase
+  Γ£ô createSeededRandom is 100% deterministic with identical seed
+  Γ£ô Rank robustness is 100% reproducible with same seed
+  Γ£ô Win counts match identically across seeded runs
+  Γ£ô Explicitly labels sensitivity check under simulated weights, not real-world prediction
+  Γ£ô Strict winner places #1 in robustness
+  Γ£ô Strictly dominant city is top in 100.0% of 1,000 sampled weightings
+  Γ£ô Lesser city wins 0.0% of samples
+  Γ£ô Two identical cities split exactly 50/50 using fractional credit sharing
+  Γ£ô Twin cities have identical win percentages (no alphabetical false 100%)
+  Γ£ô Factors missing for all candidate cities are identified and ignored
+  Γ£ô Ignored factors are not in active criteria
+  Γ£ô Win count for Bengaluru is finite
+  Γ£ô Win percentage for Bengaluru is finite
+  Γ£ô Win percentage is bounded in [0, 100]
+  Γ£ô Win count for Pune is finite
+  Γ£ô Win percentage for Pune is finite
+  Γ£ô Win percentage is bounded in [0, 100]
+  Γ£ô Win count for Mumbai is finite
+  Γ£ô Win percentage for Mumbai is finite
+  Γ£ô Win percentage is bounded in [0, 100]
+  Γ£ô All 1,000 samples produce finite, bounded scores
+Sensitivity Decision Aids Suite: all tests passed successfully.
+
+
+--- Running Local Connect Matching & Deterministic Ranking Tests ---
+  Γ£ô Direct exact industry tag match scores maximum 35 points
+  Γ£ô Direct industry match produces truthful explanation referencing matched tag
+  Γ£ô Unrelated industry yields 0 points and zero fabricated reasons
+  Γ£ô Target expansion city match (Bengaluru) scores maximum 35 points
+  Γ£ô Geographic match reason explicitly identifies target city
+  Γ£ô Current operating city match (Pune) scores 25 points
+  Γ£ô Non-expansion, non-operating city (Kolkata) scores 0 points
+  Γ£ô B2B / Distributor alignment scores maximum 15 points
+  Γ£ô Directly confirmed contact scores 15 verification points
+  Γ£ô Source-checked contact scores 10 verification points with source name
+  Γ£ô Unverified contact scores 5 verification points transparently
+  Γ£ô Ideal match across industry, expansion city, category, and verification scores 100%
+  Γ£ô Match score strictly clamped within 0-100 range
+  Γ£ô Missing startup profile zeroes out preference scores without throwing
+  Γ£ô Missing profile only awards verification score (15)
+  Γ£ô Ranked list deterministically places highest matching contact first
+  Γ£ô Higher relevant contact has higher numeric match score than unrelated contact
+
+Local Connect Matching Suite: 17 passed, 0 failed.
+
+--- Running Introduction Request & Lifecycle Tests ---
+  Γ£ô Valid structured introduction request passes schema validation
+  Γ£ô Valid legacy request with 20+ char message passes validation
+  Γ£ô Invalid UUID for contact_id fails validation
+  Γ£ô Purpose under 3 characters fails validation
+  Γ£ô Business context under 10 characters fails validation
+  Γ£ô Desired outcome under 5 characters fails validation
+  Γ£ô Founder can cancel a pending introduction request
+  Γ£ô Founder can withdraw a pending introduction request
+  Γ£ô Founder cannot unilaterally mark their own request as accepted
+  Γ£ô Founder cannot reopen a cancelled request
+  Γ£ô Recipient/admin can accept a pending request
+  Γ£ô Recipient/admin can decline a pending request
+  Γ£ô Recipient/admin can complete an accepted introduction
+  Γ£ô Transitioning to the identical status is rejected as no-op
+  Γ£ô Local connect filter parameters validate cleanly
+
+Introduction Request Suite: 15 passed, 0 failed.
+
+--- Running Market Validation Metrics & Threshold Tests ---
+  Γ£ô safeRate(5, 10) correctly returns 50.0%
+  Γ£ô safeRate(0, 10) correctly returns 0.0%
+  Γ£ô safeRate with denominator 0 safely returns null (no division by zero)
+  Γ£ô safeRate with null denominator safely returns null
+  Γ£ô safeRate with undefined denominator safely returns null
+  Γ£ô safeRate with negative denominator safely returns null
+  Γ£ô evaluateOperator: 68.4 >= 50 returns true
+  Γ£ô evaluateOperator: 49.9 >= 50 returns false
+  Γ£ô evaluateOperator: 50.1 > 50 returns true
+  Γ£ô evaluateOperator: 50 > 50 returns false
+  Γ£ô evaluateOperator: 20 <= 25 returns true
+  Γ£ô evaluateOperator: 25 <= 25 returns true
+  Γ£ô evaluateOperator: 26 <= 25 returns false
+  Γ£ô evaluateOperator: 15 < 20 returns true
+  Γ£ô evaluateOperator: 20 < 20 returns false
+  Γ£ô evaluateOperator: 50.0 = 50.0 returns true
+  Γ£ô evaluateOperator: 50.5 = 50.0 returns false
+  Γ£ô Empty responses yields 0 valid responses
+  Γ£ô Empty responses problemConfirmationRate value is null
+  Γ£ô Empty responses problemConfirmationRate formattedValue is N/A
+  Γ£ô Planned experiment with no responses yields not_evaluated
+  Γ£ô 3 of 3 positive yields 100% confirmation rate
+  Γ£ô Sample (n=3) is below threshold_min_sample (10), marked sampleSufficient = false
+  Γ£ô Sample below min threshold correctly returns outcomeInterpretation: insufficient_sample
+  Γ£ô n=12 >= 10 satisfies sample requirement
+  Γ£ô 9 of 12 yields 75.0%
+  Γ£ô 75% >= 50% satisfies threshold
+  Γ£ô Adequate positive sample correctly returns outcomeInterpretation: threshold_met
+  Γ£ô 3 of 12 yields 25.0%
+  Γ£ô 25% < 50% fails threshold
+  Γ£ô Low positive sample correctly returns outcomeInterpretation: threshold_not_met
+  Γ£ô Accurately counted 2 paid orders
+  Γ£ô Accurately counted 1 qualified lead
+  Γ£ô Accurately counted 1 signup
+  Γ£ô Accurately counted 1 objection
+  Γ£ô Accurately summed totalFinancialValue (5400 + 10800 = 16200)
+  Γ£ô Paid conversion rate is 2 / 5 = 40.0%
+  Γ£ô Paid conversion rate (40%) >= target (20%) with n=5 satisfies threshold
+
+Market Validation Metrics: 38 passed, 0 failed
+
+--- Running Market Validation Schema Validation Tests ---
+  Γ£ô Valid hypothesis passes schema validation
+  Γ£ô Hypothesis statement < 10 chars fails validation
+  Γ£ô Missing city fails hypothesis validation
+  Γ£ô Invalid status enum fails hypothesis validation
+  Γ£ô Valid experiment with structured threshold passes validation
+  Γ£ô Invalid experiment method fails validation
+  Γ£ô Experiment title < 3 chars fails validation
+  Γ£ô Threshold update with documented change_reason passes validation
+  Γ£ô Threshold update with empty change_reason is blocked (prevents silent goalpost shifts)
+  Γ£ô Threshold update with change_reason < 5 chars fails validation
+  Γ£ô Valid experiment response with signal tier and financial value passes
+  Γ£ô Empty respondent_label fails validation
+  Γ£ô Negative financial value fails validation
+
+Market Validation Schemas: 13 passed, 0 failed
+
+≡ƒôï Market Proof Classifier Tests
+
+  Γ£ô Rule 1: No experiments ΓåÆ untested
+  Γ£ô Rule 1: Total valid responses = 0
+  Γ£ô Rule 1: Sample not sufficient
+  Γ£ô Rule 2: All planned, no responses ΓåÆ untested
+  Γ£ô Rule 3: Active experiment, no responses ΓåÆ testing
+  Γ£ô Rule 4: 1 response(s) below min (3) ΓåÆ inconclusive
+  Γ£ô Rule 4: Sample not sufficient
+  Γ£ô Rule 5: Equal split ΓåÆ conflicting results detected
+  Γ£ô Rule 5: Conflicting results ΓåÆ inconclusive
+  Γ£ô Rule 6: 100% threshold rate ΓëÑ 60% ΓåÆ supported
+  Γ£ô Rule 6: ThresholdMetRate ΓëÑ SUPPORTED_THRESHOLD_RATE
+  Γ£ô Rule 7: All responses fail threshold ΓåÆ challenged
+  Γ£ô Rule 7: 1 - ThresholdMetRate ΓëÑ CHALLENGED_THRESHOLD_RATE
+  Γ£ô Signal tier: paid_order detected as commercial signal
+  Γ£ô Missing evidence: no experiments ΓåÆ not challenged (untested, not negative)
+  Γ£ô Intro request accepted Γëá hypothesis supported: still untested without experiments
+  Γ£ô Accepted intro request is recorded in classification
+  Γ£ô Mixed multi-experiment evidence: not supported when <60% threshold met rate
+  Γ£ô suggestNextAction: untested ΓåÆ recommends starting an experiment
+  Γ£ô suggestNextAction: supported without commercial signal ΓåÆ recommends paid pilot
+  Γ£ô suggestNextAction: conflicting results ΓåÆ recommends follow-up experiment
+  Γ£ô suggestNextAction: insufficient sample ΓåÆ shows MIN_VALID_RESPONSES_FOR_CONCLUSION
+  Γ£ô summarise: paid_order + repeat_purchase ΓåÆ strongSignalCount=2
+  Γ£ô summarise: reported_interest + qualified_lead ΓåÆ weakSignalCount=2
+  Γ£ô summarise: 2 responses < min 5 ΓåÆ sampleSufficient=false
+  Γ£ô summarise: insufficient sample ΓåÆ outcomeInterpretation=insufficient_sample
+  Γ£ô summarise: 50/50 split n=4 ΓåÆ conflictingResults=true
+  Γ£ô summarise: 5:1 majority ΓåÆ not conflicting (clear positive trend)
+
+  Results: 28 passed, 0 failed
+
+
+--- Running AI Provider Layer & Guardrail Tests ---
+  Γ£ô PII Redaction strips emails and telephone numbers
+  Γ£ô Data boundary tags and input length truncation enforced
+  Γ£ô Citation validator admits genuine source IDs and rejects hallucinated IDs
+  Γ£ô Rate limiter enforces 10 req/min quota and provides retry delay
+  Γ£ô isAIConfigured safely flags missing or placeholder credentials
+  Γ£ô Mock AI provider correctly handles success, schema rejection, and timeouts
+AI Provider Suite: 8 passed, 0 failed.
+
+--- Running AI 5 Use Cases Suite ---
+  Γ£ô Use Case A: Zero evidence safely produces insufficient-data report without model call
+  Γ£ô Use Case A: Genuine citations retained, hallucinated source citations stripped
+  Γ£ô Use Case B: Competitor extracted as unverified draft with explicit excerpt
+  Γ£ô Use Case C: Requirements converted into typed ContactCategory with unmatched criteria
+  Γ£ô Use Case D: Falsifiable hypothesis and pre-registered experiment thresholds generated
+  Γ£ô Use Case E: Preserves authoritative deterministic outcome and separates commercial vs verbal signals
+AI 5 Use Cases Suite: 9 passed, 0 failed.
+
+--- Running Prune AI Gateway Narration Tests (Phase 3) ---
+  Γ£ô generateDeterministicExplanation produces valid template narrative
+  Γ£ô Feature flag OFF: isAiGenerated is false
+  Γ£ô Feature flag OFF: fallbackReason is flag_disabled
+  Γ£ô Feature flag OFF: uses template disclaimer
+  Γ£ô Feature flag OFF: produces structured deterministic template summary
+  Γ£ô Feature flag OFF: pruneMetadata is null
+  Γ£ô Missing key: isAiGenerated is false
+  Γ£ô Missing key: fallbackReason is missing_key
+  Γ£ô Missing key: uses template disclaimer
+  Γ£ô Gateway error: isAiGenerated is false
+  Γ£ô Gateway error: fallbackReason is gateway_error
+  Γ£ô Gateway error: safely returns deterministic template without throwing
+  Γ£ô Timeout: isAiGenerated is false
+  Γ£ô Timeout: fallbackReason is timeout
+  Γ£ô Timeout: returns fallback template within short timeout window
+  Γ£ô Successful call: isAiGenerated is true
+  Γ£ô Successful call: displays required AI-generated disclaimer
+  Γ£ô Successful call: returns model narrative
+  Γ£ô AI narrative cannot mutate Bengaluru score
+  Γ£ô AI narrative cannot mutate Mumbai score
+  Γ£ô AI narrative cannot mutate winner city
+  Γ£ô pruneMetadata parsed successfully
+  Γ£ô pruneMetadata correctly captured cache_hit: true
+  Γ£ô pruneMetadata correctly captured cost_usd
+  Γ£ô pruneMetadata correctly captured signed receipt
+  Γ£ô pruneMetadata captures savings when reported
+  Γ£ô Null prune_metadata handled safely without crashing
+  Γ£ô Defensive parsing extracts valid boolean
+  Γ£ô Zero savings are never claimed as savings
+  Γ£ô Non-number cost is filtered safely
+  Γ£ô Empty model content falls back to deterministic template
+  Γ£ô Fallback reason tagged as malformed_output
+Prune AI Gateway Suite: all tests passed successfully.
+
+
+--- Running End-to-End Critical Journey Integration Tests ---
+  Γ£ô Journey A & B: User Profile validation and schema constraints enforced
+  Γ£ô Journey C: City Intelligence Fit Score is deterministic and versioned
+  Γ£ô Journey D: Local Connect multi-factor match and verified status verified
+  Γ£ô Journey E: Experiment thresholds pre-registered and threshold changes audited
+  Γ£ô Journey F: Market Proof Loop evidence synthesized with commercial signal tracking
+  Γ£ô Journey G: AI citation validator strictly purges unlisted references
+
+--- Running Client Bundle Secret Leak Security Audit ---
+  Γ£ô Zero server secrets found in any client component ("use client")
+  Γ£ô PRUNE_API_KEY is strictly server-only with no NEXT_PUBLIC_* exposure
+  Γ£ô Client bundle audit passed with 0 leaks.
+
+====================================================
+  ALL TEST SUITES PASSED SUCCESSFULLY
+====================================================
+
+
+--- 5. Protected Scope Guard Status ---
+ M .gitignore
+ M package-lock.json
+ M scripts/run-tests.ts
+ M src/app/(dashboard)/city-intelligence/[id]/page.tsx
+ M src/lib/ai/actions.ts
+?? .env.example
+?? docs/test-output/
+?? scripts/check-bundle-secrets.ts
+?? src/components/scoring/
+?? src/lib/ai/__tests__/prune.test.ts
+?? src/lib/ai/prune.ts
+?? src/lib/scoring/__tests__/sensitivity.test.ts
+?? src/lib/scoring/sensitivity.ts
+Protected-scope guard: verified all modified files are within Phase 3 scope.
