@@ -1,0 +1,388 @@
+﻿====================================================
+PHASE 2 VALIDATION AND TEST SUITE EXECUTION
+Timestamp: 2026-10-22T13:00:05Z
+====================================================
+
+--- 1. FULL TEST SUITE (npm test) ---
+
+> citypilot@0.1.0 test
+> npx tsx scripts/run-tests.ts
+
+
+--- Running Fit Score Engine Tests (Version: v1.0.0) ---
+  Ô£ô Scoring model version is v1.0.0
+  Ô£ô Identical inputs produce identical scores (Reproducibility)
+  Ô£ô Returned scoring model version is v1.0.0
+  Ô£ô Weighted score mathematically matches expected formula (76.75)
+  Ô£ô Full criteria set produces 100% evidence coverage
+  Ô£ô Full criteria set does not flag insufficient data
+  Ô£ô Weights clamped between 0 and 100 correctly
+  Ô£ô Missing criterion excluded from denominator instead of treated as 0
+  Ô£ô Missing criterion tracked in missing_criteria array
+  Ô£ô Evidence coverage correctly reports 80% (4 of 5 criteria)
+  Ô£ô 4 criteria and 80% weight remains sufficient data
+  Ô£ô Triggers insufficient_data when only 1 criterion is available
+  Ô£ô Returns null total_score when data is insufficient (no false confidence)
+  Ô£ô Evidence coverage correctly reports 20%
+  Ô£ô Entry Cost directionality: Lower commercial rent scores higher than expensive rent
+  Ô£ô Competitive Opportunity directionality: Emerging market has higher opportunity score than saturated incumbent market
+  Ô£ô Coverage percentage is 50%
+  Ô£ô Correct verified indicator count (1)
+  Ô£ô Correct simulated indicator count (1)
+  Ô£ô Simulated indicators are explicitly flagged in limitations
+
+Results: 20 passed, 0 failed.
+
+
+--- Running Golden Characterization Test (Baseline Scores) ---
+  Ô£ô Bengaluru baseline score matches golden value (76.45)
+  Ô£ô Bengaluru has 100% evidence coverage
+  Ô£ô Bengaluru has sufficient data
+  Ô£ô Deterministic reproducibility maintained
+
+Golden Characterization: 4 passed, 0 failed.
+
+
+--- Running Weights Validation Tests ---
+  Ô£ô Valid weights pass validation
+  Ô£ô Negative weight is rejected
+  Ô£ô Negative weight error message is clear
+  Ô£ô Non-numeric string weight is rejected
+  Ô£ô Empty string weight is rejected
+  Ô£ô Null weight is rejected
+  Ô£ô Undefined weight is rejected
+  Ô£ô NaN weight is rejected
+  Ô£ô NaN error message is clear
+  Ô£ô Infinity weight is rejected
+  Ô£ô Infinity error message is clear
+  Ô£ô All-zero weights are rejected
+  Ô£ô All-zero error message is clear
+  Ô£ô One zero weight is valid (factor ignored)
+  Ô£ô Unknown criterion key is rejected
+  Ô£ô Unknown key error message is clear
+  Ô£ô Empty weights object is rejected
+
+Weights Validation: 17 passed, 0 failed.
+
+====================================================
+   CITY LAUNCHPAD ÔÇö COMPREHENSIVE TEST RUNNER
+====================================================
+
+--- Running Startup Profile Validation Tests ---
+  Ô£ô Valid full profile passes validation
+  Ô£ô Valid minimal profile with only required fields passes
+  Ô£ô Missing name fails validation
+  Ô£ô Short business description fails (<10 chars)
+  Ô£ô Missing current_city fails validation
+  Ô£ô Missing primary_channel fails validation
+  Ô£ô Invalid price range (min > max) fails validation
+  Ô£ô Negative price fails validation
+  Ô£ô Single price (only price_min) succeeds
+  Ô£ô Invalid website URL format fails
+  Ô£ô Empty website_url succeeds (treated as optional)
+  Ô£ô Candidate expansion cities array persists
+
+Results: 12 passed, 0 failed.
+
+
+--- Running Fit Score Engine Tests (Version: v1.0.0) ---
+  Ô£ô Scoring model version is v1.0.0
+  Ô£ô Identical inputs produce identical scores (Reproducibility)
+  Ô£ô Returned scoring model version is v1.0.0
+  Ô£ô Weighted score mathematically matches expected formula (76.75)
+  Ô£ô Full criteria set produces 100% evidence coverage
+  Ô£ô Full criteria set does not flag insufficient data
+  Ô£ô Weights clamped between 0 and 100 correctly
+  Ô£ô Missing criterion excluded from denominator instead of treated as 0
+  Ô£ô Missing criterion tracked in missing_criteria array
+  Ô£ô Evidence coverage correctly reports 80% (4 of 5 criteria)
+  Ô£ô 4 criteria and 80% weight remains sufficient data
+  Ô£ô Triggers insufficient_data when only 1 criterion is available
+  Ô£ô Returns null total_score when data is insufficient (no false confidence)
+  Ô£ô Evidence coverage correctly reports 20%
+  Ô£ô Entry Cost directionality: Lower commercial rent scores higher than expensive rent
+  Ô£ô Competitive Opportunity directionality: Emerging market has higher opportunity score than saturated incumbent market
+  Ô£ô Coverage percentage is 50%
+  Ô£ô Correct verified indicator count (1)
+  Ô£ô Correct simulated indicator count (1)
+  Ô£ô Simulated indicators are explicitly flagged in limitations
+
+Results: 20 passed, 0 failed.
+
+
+--- Running Local Connect Matching & Deterministic Ranking Tests ---
+  Ô£ô Direct exact industry tag match scores maximum 35 points
+  Ô£ô Direct industry match produces truthful explanation referencing matched tag
+  Ô£ô Unrelated industry yields 0 points and zero fabricated reasons
+  Ô£ô Target expansion city match (Bengaluru) scores maximum 35 points
+  Ô£ô Geographic match reason explicitly identifies target city
+  Ô£ô Current operating city match (Pune) scores 25 points
+  Ô£ô Non-expansion, non-operating city (Kolkata) scores 0 points
+  Ô£ô B2B / Distributor alignment scores maximum 15 points
+  Ô£ô Directly confirmed contact scores 15 verification points
+  Ô£ô Source-checked contact scores 10 verification points with source name
+  Ô£ô Unverified contact scores 5 verification points transparently
+  Ô£ô Ideal match across industry, expansion city, category, and verification scores 100%
+  Ô£ô Match score strictly clamped within 0-100 range
+  Ô£ô Missing startup profile zeroes out preference scores without throwing
+  Ô£ô Missing profile only awards verification score (15)
+  Ô£ô Ranked list deterministically places highest matching contact first
+  Ô£ô Higher relevant contact has higher numeric match score than unrelated contact
+
+Local Connect Matching Suite: 17 passed, 0 failed.
+
+--- Running Introduction Request & Lifecycle Tests ---
+  Ô£ô Valid structured introduction request passes schema validation
+  Ô£ô Valid legacy request with 20+ char message passes validation
+  Ô£ô Invalid UUID for contact_id fails validation
+  Ô£ô Purpose under 3 characters fails validation
+  Ô£ô Business context under 10 characters fails validation
+  Ô£ô Desired outcome under 5 characters fails validation
+  Ô£ô Founder can cancel a pending introduction request
+  Ô£ô Founder can withdraw a pending introduction request
+  Ô£ô Founder cannot unilaterally mark their own request as accepted
+  Ô£ô Founder cannot reopen a cancelled request
+  Ô£ô Recipient/admin can accept a pending request
+  Ô£ô Recipient/admin can decline a pending request
+  Ô£ô Recipient/admin can complete an accepted introduction
+  Ô£ô Transitioning to the identical status is rejected as no-op
+  Ô£ô Local connect filter parameters validate cleanly
+
+Introduction Request Suite: 15 passed, 0 failed.
+
+--- Running Market Validation Metrics & Threshold Tests ---
+  Ô£ô safeRate(5, 10) correctly returns 50.0%
+  Ô£ô safeRate(0, 10) correctly returns 0.0%
+  Ô£ô safeRate with denominator 0 safely returns null (no division by zero)
+  Ô£ô safeRate with null denominator safely returns null
+  Ô£ô safeRate with undefined denominator safely returns null
+  Ô£ô safeRate with negative denominator safely returns null
+  Ô£ô evaluateOperator: 68.4 >= 50 returns true
+  Ô£ô evaluateOperator: 49.9 >= 50 returns false
+  Ô£ô evaluateOperator: 50.1 > 50 returns true
+  Ô£ô evaluateOperator: 50 > 50 returns false
+  Ô£ô evaluateOperator: 20 <= 25 returns true
+  Ô£ô evaluateOperator: 25 <= 25 returns true
+  Ô£ô evaluateOperator: 26 <= 25 returns false
+  Ô£ô evaluateOperator: 15 < 20 returns true
+  Ô£ô evaluateOperator: 20 < 20 returns false
+  Ô£ô evaluateOperator: 50.0 = 50.0 returns true
+  Ô£ô evaluateOperator: 50.5 = 50.0 returns false
+  Ô£ô Empty responses yields 0 valid responses
+  Ô£ô Empty responses problemConfirmationRate value is null
+  Ô£ô Empty responses problemConfirmationRate formattedValue is N/A
+  Ô£ô Planned experiment with no responses yields not_evaluated
+  Ô£ô 3 of 3 positive yields 100% confirmation rate
+  Ô£ô Sample (n=3) is below threshold_min_sample (10), marked sampleSufficient = false
+  Ô£ô Sample below min threshold correctly returns outcomeInterpretation: insufficient_sample
+  Ô£ô n=12 >= 10 satisfies sample requirement
+  Ô£ô 9 of 12 yields 75.0%
+  Ô£ô 75% >= 50% satisfies threshold
+  Ô£ô Adequate positive sample correctly returns outcomeInterpretation: threshold_met
+  Ô£ô 3 of 12 yields 25.0%
+  Ô£ô 25% < 50% fails threshold
+  Ô£ô Low positive sample correctly returns outcomeInterpretation: threshold_not_met
+  Ô£ô Accurately counted 2 paid orders
+  Ô£ô Accurately counted 1 qualified lead
+  Ô£ô Accurately counted 1 signup
+  Ô£ô Accurately counted 1 objection
+  Ô£ô Accurately summed totalFinancialValue (5400 + 10800 = 16200)
+  Ô£ô Paid conversion rate is 2 / 5 = 40.0%
+  Ô£ô Paid conversion rate (40%) >= target (20%) with n=5 satisfies threshold
+
+Market Validation Metrics: 38 passed, 0 failed
+
+--- Running Market Validation Schema Validation Tests ---
+  Ô£ô Valid hypothesis passes schema validation
+  Ô£ô Hypothesis statement < 10 chars fails validation
+  Ô£ô Missing city fails hypothesis validation
+  Ô£ô Invalid status enum fails hypothesis validation
+  Ô£ô Valid experiment with structured threshold passes validation
+  Ô£ô Invalid experiment method fails validation
+  Ô£ô Experiment title < 3 chars fails validation
+  Ô£ô Threshold update with documented change_reason passes validation
+  Ô£ô Threshold update with empty change_reason is blocked (prevents silent goalpost shifts)
+  Ô£ô Threshold update with change_reason < 5 chars fails validation
+  Ô£ô Valid experiment response with signal tier and financial value passes
+  Ô£ô Empty respondent_label fails validation
+  Ô£ô Negative financial value fails validation
+
+Market Validation Schemas: 13 passed, 0 failed
+
+­ƒôï Market Proof Classifier Tests
+
+  Ô£ô Rule 1: No experiments ÔåÆ untested
+  Ô£ô Rule 1: Total valid responses = 0
+  Ô£ô Rule 1: Sample not sufficient
+  Ô£ô Rule 2: All planned, no responses ÔåÆ untested
+  Ô£ô Rule 3: Active experiment, no responses ÔåÆ testing
+  Ô£ô Rule 4: 1 response(s) below min (3) ÔåÆ inconclusive
+  Ô£ô Rule 4: Sample not sufficient
+  Ô£ô Rule 5: Equal split ÔåÆ conflicting results detected
+  Ô£ô Rule 5: Conflicting results ÔåÆ inconclusive
+  Ô£ô Rule 6: 100% threshold rate ÔëÑ 60% ÔåÆ supported
+  Ô£ô Rule 6: ThresholdMetRate ÔëÑ SUPPORTED_THRESHOLD_RATE
+  Ô£ô Rule 7: All responses fail threshold ÔåÆ challenged
+  Ô£ô Rule 7: 1 - ThresholdMetRate ÔëÑ CHALLENGED_THRESHOLD_RATE
+  Ô£ô Signal tier: paid_order detected as commercial signal
+  Ô£ô Missing evidence: no experiments ÔåÆ not challenged (untested, not negative)
+  Ô£ô Intro request accepted Ôëá hypothesis supported: still untested without experiments
+  Ô£ô Accepted intro request is recorded in classification
+  Ô£ô Mixed multi-experiment evidence: not supported when <60% threshold met rate
+  Ô£ô suggestNextAction: untested ÔåÆ recommends starting an experiment
+  Ô£ô suggestNextAction: supported without commercial signal ÔåÆ recommends paid pilot
+  Ô£ô suggestNextAction: conflicting results ÔåÆ recommends follow-up experiment
+  Ô£ô suggestNextAction: insufficient sample ÔåÆ shows MIN_VALID_RESPONSES_FOR_CONCLUSION
+  Ô£ô summarise: paid_order + repeat_purchase ÔåÆ strongSignalCount=2
+  Ô£ô summarise: reported_interest + qualified_lead ÔåÆ weakSignalCount=2
+  Ô£ô summarise: 2 responses < min 5 ÔåÆ sampleSufficient=false
+  Ô£ô summarise: insufficient sample ÔåÆ outcomeInterpretation=insufficient_sample
+  Ô£ô summarise: 50/50 split n=4 ÔåÆ conflictingResults=true
+  Ô£ô summarise: 5:1 majority ÔåÆ not conflicting (clear positive trend)
+
+  Results: 28 passed, 0 failed
+
+
+--- Running Weights Validation Tests ---
+  Ô£ô Valid weights pass validation
+  Ô£ô Negative weight is rejected
+  Ô£ô Negative weight error message is clear
+  Ô£ô Non-numeric string weight is rejected
+  Ô£ô Empty string weight is rejected
+  Ô£ô Null weight is rejected
+  Ô£ô Undefined weight is rejected
+  Ô£ô NaN weight is rejected
+  Ô£ô NaN error message is clear
+  Ô£ô Infinity weight is rejected
+  Ô£ô Infinity error message is clear
+  Ô£ô All-zero weights are rejected
+  Ô£ô All-zero error message is clear
+  Ô£ô One zero weight is valid (factor ignored)
+  Ô£ô Unknown criterion key is rejected
+  Ô£ô Unknown key error message is clear
+  Ô£ô Empty weights object is rejected
+
+Weights Validation: 17 passed, 0 failed.
+
+
+--- Running What-If Ranking & Explanations Tests (Phase 2) ---
+  Ô£ô Default weights reproduce Bengaluru golden baseline exactly (76.45)
+  Ô£ô Default weights reproduce Mumbai golden baseline exactly (76.10)
+  Ô£ô Baseline ranks maintain Bengaluru #1, Mumbai #2
+  Ô£ô Baseline ranks show "No change"
+  Ô£ô Baseline driver shows "No change" when no movement occurred
+  Ô£ô Mumbai hand-calculated score matches 79.08 to 2 decimals
+  Ô£ô Bengaluru hand-calculated score matches 78.16 to 2 decimals
+  Ô£ô Mumbai moved from rank #2 to rank #1
+  Ô£ô Bengaluru moved from rank #1 to rank #2
+  Ô£ô Mumbai rank movement is +1
+  Ô£ô Bengaluru rank movement is -1
+  Ô£ô Deterministic driver identifies Demand Fit as main driver for Mumbai rank change
+  Ô£ô Driver impact matches hand-calculated score reversal difference (|79.08 - 76.10| = 2.98)
+  Ô£ô Deterministic driver identifies Demand Fit as main driver for Bengaluru rank change
+  Ô£ô hasRankChanges flag is true when ranks swapped
+  Ô£ô liveAnnouncement announces rank movement for screen readers
+  Ô£ô Ranks remain unchanged when raising Entry Cost
+  Ô£ô Driver returns "No change" when no rank movement occurred
+  Ô£ô Driver impact is 0 when no rank movement occurred
+  Ô£ô Individual zero weight is valid
+  Ô£ô Individual zero calculates valid numeric score without NaN
+  Ô£ô All-zero weights are rejected by validation
+  Ô£ô All-zero error message explains requirement clearly
+  Ô£ô Scorer returns null total_score and insufficient_data for all-zero weights (never NaN)
+  Ô£ô City with missing factors computes correct baseline score (66.15)
+  Ô£ô Changing weight of missing factor does NOT affect score for the city where it is missing
+  Ô£ô Zeroing weight of missing factor does NOT affect score for the city where it is missing
+  Ô£ô Insufficient data city is flagged as insufficientData = true
+  Ô£ô Unranked city has null rank (never assigned fake rank like 0 or 99)
+  Ô£ô Unranked city has null score (never assigned fake score like 0)
+  Ô£ô Unranked city has null rank movement and "ÔÇö" label
+  Ô£ô Unranked city has "ÔÇö" driver
+  Ô£ô Unranked city lists all 4 missing criteria accurately
+  Ô£ô Tied cities break tie deterministically via alphabetical city name (City-Alpha #1, City-Zeta #2)
+  Ô£ô Preset "Cost-first" passes weights schema validation
+  Ô£ô Preset "Cost-first" computes ranking for all candidate cities without errors
+  Ô£ô Preset "Cost-first" produces valid numeric score for Bengaluru (72.75)
+  Ô£ô Preset "Demand-first" passes weights schema validation
+  Ô£ô Preset "Demand-first" computes ranking for all candidate cities without errors
+  Ô£ô Preset "Demand-first" produces valid numeric score for Bengaluru (78.45)
+  Ô£ô Preset "Balanced" passes weights schema validation
+  Ô£ô Preset "Balanced" computes ranking for all candidate cities without errors
+  Ô£ô Preset "Balanced" produces valid numeric score for Bengaluru (77)
+  Ô£ô Field validation rejects negative values
+  Ô£ô Field validation rejects values over 100
+  Ô£ô Field validation rejects non-numeric string
+  Ô£ô Field validation rejects empty string
+  Ô£ô Field validation rejects NaN string
+  Ô£ô Field validation rejects Infinity
+  Ô£ô Field validation accepts 0
+  Ô£ô Field validation accepts 100
+  Ô£ô Field validation accepts 25
+
+What-If Ranking Suite: 52 passed, 0 failed.
+
+
+--- Running AI Provider Layer & Guardrail Tests ---
+  Ô£ô PII Redaction strips emails and telephone numbers
+  Ô£ô Data boundary tags and input length truncation enforced
+  Ô£ô Citation validator admits genuine source IDs and rejects hallucinated IDs
+  Ô£ô Rate limiter enforces 10 req/min quota and provides retry delay
+  Ô£ô isAIConfigured safely flags missing or placeholder credentials
+  Ô£ô Mock AI provider correctly handles success, schema rejection, and timeouts
+AI Provider Suite: 8 passed, 0 failed.
+
+--- Running AI 5 Use Cases Suite ---
+  Ô£ô Use Case A: Zero evidence safely produces insufficient-data report without model call
+  Ô£ô Use Case A: Genuine citations retained, hallucinated source citations stripped
+  Ô£ô Use Case B: Competitor extracted as unverified draft with explicit excerpt
+  Ô£ô Use Case C: Requirements converted into typed ContactCategory with unmatched criteria
+  Ô£ô Use Case D: Falsifiable hypothesis and pre-registered experiment thresholds generated
+  Ô£ô Use Case E: Preserves authoritative deterministic outcome and separates commercial vs verbal signals
+AI 5 Use Cases Suite: 9 passed, 0 failed.
+
+--- Running End-to-End Critical Journey Integration Tests ---
+  Ô£ô Journey A & B: User Profile validation and schema constraints enforced
+  Ô£ô Journey C: City Intelligence Fit Score is deterministic and versioned
+  Ô£ô Journey D: Local Connect multi-factor match and verified status verified
+  Ô£ô Journey E: Experiment thresholds pre-registered and threshold changes audited
+  Ô£ô Journey F: Market Proof Loop evidence synthesized with commercial signal tracking
+  Ô£ô Journey G: AI citation validator strictly purges unlisted references
+====================================================
+  ALL TEST SUITES PASSED SUCCESSFULLY
+====================================================
+
+
+
+--- 2. TYPE CHECK (npm run type-check) ---
+
+> citypilot@0.1.0 type-check
+> tsc --noEmit
+
+
+
+--- 3. LINT (npm run lint) ---
+
+> citypilot@0.1.0 lint
+> eslint
+
+
+
+--- 4. GIT DIFF --CHECK ---
+git : warning: in the working copy of 'scripts/run-tests.ts', LF will be replaced by CRLF the next time Git touches it
+At line:20 char:14
++ $diffCheck = git diff --check 2>&1 | Out-String
++              ~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (warning: in the... Git touches it:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+warning: in the working copy of 'src/app/(dashboard)/city-intelligence/[id]/page.tsx', LF will be replaced by CRLF the 
+next time Git touches it
+
+
+--- 5. PROTECTED SCOPE GUARD ---
+Protected paths diff status: 0 characters
+
+
+====================================================
+ALL CHECKS PASSED FOR PHASE 2
+====================================================
