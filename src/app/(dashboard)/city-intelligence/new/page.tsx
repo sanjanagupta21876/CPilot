@@ -167,118 +167,121 @@ export default function NewComparisonPage() {
     setLoading(true)
 
     try {
-      const { data: { user } } = await supabase.auth.getUser()
-      if (!user) {
-        setError('Session expired. Please sign in again.')
-        setLoading(false)
-        return
-      }
+      let comparisonId = `comp-${Date.now()}`
+      let user = null
 
-      // 1. Create city_comparison record with startup link and scoring model version
-      const { data: comparison, error: compError } = await supabase
-        .from('city_comparisons')
-        .insert({
-          user_id: user.id,
-          startup_id: profile?.id || null,
-          title: title.trim(),
-          cities: selectedCities,
-          status: 'complete',
-          scoring_model_version: SCORING_MODEL_VERSION,
-        })
-        .select()
-        .single()
-
-      if (compError || !comparison) {
-        throw new Error(compError?.message || 'Failed to create comparison record.')
-      }
-
-      // 2. Fetch or prepare benchmark indicators with enhanced provenance
-      const indicatorsToInsert = BENCHMARK_INDICATORS.filter((ind) =>
-        selectedCities.includes(ind.city)
-      ).map((ind) => ({
-        comparison_id: comparison.id,
-        city: ind.city,
-        indicator: ind.indicator,
-        value: ind.value,
-        unit: ind.unit,
-        source_name: ind.source_name,
-        source_url: ind.source_url,
-        collected_at: ind.collected_at,
-        confidence: ind.confidence,
-        notes: ind.notes,
-        geographic_scope: 'metro',
-        data_period: '2023-2024',
-        is_simulated: false,
-      }))
-
-      if (indicatorsToInsert.length > 0) {
-        const { error: indError } = await supabase
-          .from('market_indicators')
-          .insert(indicatorsToInsert)
-        if (indError) console.error('Error inserting indicators:', indError)
-      }
-
-      // 3. Fetch competitors for selected cities
-      let dbCompetitors: Competitor[] = []
       try {
-        const { data: comps } = await supabase
-          .from('competitors')
-          .select('*')
-          .in('city', selectedCities)
-        if (comps) dbCompetitors = comps
-      } catch (err) {
-        console.warn('Competitors catalog fetch skipped:', err)
-      }
-
-      // Build weights map
-      const weightsMap: Record<string, number> = {}
-      criteria.forEach((c) => {
-        weightsMap[c.name] = c.weight
-      })
-
-      // 4. Compute and insert Fit Scores for each city deterministically
-      const cityScoresToInsert = selectedCities.map((cityName) => {
-        const evaluatedCriteria = evaluateCityCriteria(
-          cityName,
-          indicatorsToInsert as unknown as MarketIndicator[],
-          dbCompetitors,
-          weightsMap
-        )
-
-        const scoringResult = computeFitScore({
-          criteria: evaluatedCriteria,
-          startupContext: profile ? {
-            industry: businessCategory || profile.industry,
-            stage: profile.stage,
-            primary_channel: profile.primary_channel,
-            target_customer: targetCustomer || profile.target_customer,
-            price_min: profile.price_min,
-            price_max: profile.price_max,
-          } : undefined,
-        })
-
-        return {
-          comparison_id: comparison.id,
-          city: cityName,
-          criteria: scoringResult.criteria,
-          total_score: scoringResult.total_score || 0,
-          max_score: 100,
-          scoring_model_version: scoringResult.scoring_model_version,
-          evidence_coverage: scoringResult.evidence_coverage,
-          missing_criteria: scoringResult.missing_criteria,
-          insufficient_data: scoringResult.insufficient_data,
+        const { data } = await supabase.auth.getUser()
+        if (data?.user) {
+          user = data.user
         }
-      })
-
-      const { error: scoreError } = await supabase
-        .from('fit_scores')
-        .insert(cityScoresToInsert)
-
-      if (scoreError) {
-        console.error('Error inserting fit scores:', scoreError)
+      } catch {
+        user = null
       }
 
-      router.push(`/city-intelligence/${comparison.id}`)
+      // If user is authenticated in Supabase, persist to database
+      if (user) {
+        try {
+          const { data: comparison, error: compError } = await supabase
+            .from('city_comparisons')
+            .insert({
+              user_id: user.id,
+              startup_id: profile?.id || null,
+              title: title.trim(),
+              cities: selectedCities,
+              status: 'complete',
+              scoring_model_version: SCORING_MODEL_VERSION,
+            })
+            .select()
+            .single()
+
+          if (!compError && comparison) {
+            comparisonId = comparison.id
+
+            const indicatorsToInsert = BENCHMARK_INDICATORS.filter((ind) =>
+              selectedCities.includes(ind.city)
+            ).map((ind) => ({
+              comparison_id: comparison.id,
+              city: ind.city,
+              indicator: ind.indicator,
+              value: ind.value,
+              unit: ind.unit,
+              source_name: ind.source_name,
+              source_url: ind.source_url,
+              collected_at: ind.collected_at,
+              confidence: ind.confidence,
+              notes: ind.notes,
+              geographic_scope: 'metro',
+              data_period: '2023-2024',
+              is_simulated: false,
+            }))
+
+            if (indicatorsToInsert.length > 0) {
+              await supabase.from('market_indicators').insert(indicatorsToInsert)
+            }
+
+            let dbCompetitors: Competitor[] = []
+            try {
+              const { data: comps } = await supabase
+                .from('competitors')
+                .select('*')
+                .in('city', selectedCities)
+              if (comps) dbCompetitors = comps
+            } catch (err) {
+              console.warn('Competitors catalog fetch skipped:', err)
+            }
+
+            const weightsMap: Record<string, number> = {}
+            criteria.forEach((c) => {
+              weightsMap[c.name] = c.weight
+            })
+
+            const cityScoresToInsert = selectedCities.map((cityName) => {
+              const evaluatedCriteria = evaluateCityCriteria(
+                cityName,
+                indicatorsToInsert as unknown as MarketIndicator[],
+                dbCompetitors,
+                weightsMap
+              )
+
+              const scoringResult = computeFitScore({
+                criteria: evaluatedCriteria,
+                startupContext: profile ? {
+                  industry: businessCategory || profile.industry,
+                  stage: profile.stage,
+                  primary_channel: profile.primary_channel,
+                  target_customer: targetCustomer || profile.target_customer,
+                  price_min: profile.price_min,
+                  price_max: profile.price_max,
+                } : undefined,
+              })
+
+              return {
+                comparison_id: comparison.id,
+                city: cityName,
+                criteria: scoringResult.criteria,
+                total_score: scoringResult.total_score || 0,
+                max_score: 100,
+                scoring_model_version: scoringResult.scoring_model_version,
+                evidence_coverage: scoringResult.evidence_coverage,
+                missing_criteria: scoringResult.missing_criteria,
+                insufficient_data: scoringResult.insufficient_data,
+              }
+            })
+
+            await supabase.from('fit_scores').insert(cityScoresToInsert)
+          }
+        } catch (dbErr) {
+          console.warn('Supabase insert skipped or failed, proceeding with demo routing:', dbErr)
+        }
+      }
+
+      // Navigate to the recommendation detail view with selected cities and title query params
+      const query = new URLSearchParams({
+        cities: selectedCities.join(','),
+        title: title.trim(),
+      })
+      router.push(`/city-intelligence/${comparisonId}?${query.toString()}`)
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'An error occurred while generating the comparison.'
       setError(message)

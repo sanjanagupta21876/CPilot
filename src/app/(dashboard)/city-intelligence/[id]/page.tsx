@@ -14,6 +14,7 @@ import { ComparisonDetailClient } from './ComparisonDetailClient'
 
 interface PageProps {
   params: Promise<{ id: string }>
+  searchParams?: Promise<{ cities?: string; title?: string }>
 }
 
 export const metadata: Metadata = {
@@ -21,8 +22,9 @@ export const metadata: Metadata = {
   description: 'Deterministic city ranking with adjustable priority weights, transparent missingness handling, and driver explanations.',
 }
 
-export default async function ComparisonDetailPage({ params }: PageProps) {
+export default async function ComparisonDetailPage({ params, searchParams }: PageProps) {
   const { id } = await params
+  const search = searchParams ? await searchParams : {}
   const supabase = await createClient()
 
   // 1. Fetch comparison
@@ -40,19 +42,29 @@ export default async function ComparisonDetailPage({ params }: PageProps) {
     comparison = null
   }
 
+  const queryCities = search.cities ? search.cities.split(',').filter(Boolean) : null
+  const queryTitle = search.title || null
+
   // Fallback demo comparison if ID not found in database
   if (!comparison) {
     const demoFound = DEMO_COMPARISONS.find((c) => c.id === id)
-    if (demoFound) {
+    if (demoFound && !queryCities) {
       comparison = demoFound
       isDemo = true
     } else {
+      const targetCities = queryCities && queryCities.length >= 2 ? queryCities : ['Bengaluru', 'Mumbai']
+      const targetTitle =
+        queryTitle ||
+        (targetCities.length >= 2
+          ? `${targetCities.join(' vs ')} Expansion Fit Comparison`
+          : 'City Expansion Fit Comparison')
+
       comparison = {
         id,
         user_id: 'demo-user-001',
         startup_id: 'demo-profile-001',
-        title: 'Bengaluru vs Mumbai Expansion Fit Comparison',
-        cities: ['Bengaluru', 'Mumbai'],
+        title: targetTitle,
+        cities: targetCities,
         status: 'complete' as const,
         scoring_model_version: SCORING_MODEL_VERSION,
         created_at: new Date().toISOString(),
