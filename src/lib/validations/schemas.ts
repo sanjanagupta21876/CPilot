@@ -321,3 +321,34 @@ export const assumptionSchema = z.object({
   comparison_id: z.string().uuid().optional().nullable(),
 })
 export type AssumptionInput = z.infer<typeof assumptionSchema>
+
+// ─── What-If Weights ──────────────────────────────────────────
+export const weightsSchema = z
+  .record(
+    z.string(),
+    z
+      .number()
+      .min(0, 'Weight cannot be negative')
+      .max(100, 'Weight cannot exceed 100')
+      .refine((val) => !Number.isNaN(val), 'Weight cannot be NaN')
+      .refine((val) => !Number.isFinite(val) || Math.abs(val) < Infinity, 'Weight cannot be Infinity')
+  )
+  .refine((weights) => {
+    const values = Object.values(weights)
+    return values.length > 0 && values.some((v) => v > 0)
+  }, 'At least one weight must be greater than 0 (all-zero weights are invalid)')
+  .refine((weights) => {
+    // Validate against known criterion keys
+    const validKeys = [
+      'Demand Fit',
+      'Competitive Opportunity',
+      'Distribution Feasibility',
+      'Entry Cost & Unit Economics',
+      'Operational Feasibility & Talent',
+    ]
+    const inputKeys = Object.keys(weights)
+    return inputKeys.every((key) => validKeys.includes(key))
+  }, 'Unknown criterion key provided. Valid keys are: Demand Fit, Competitive Opportunity, Distribution Feasibility, Entry Cost & Unit Economics, Operational Feasibility & Talent')
+
+export type WeightsInput = z.infer<typeof weightsSchema>
+

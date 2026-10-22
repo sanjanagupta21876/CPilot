@@ -8,6 +8,7 @@ import { runMarketProofClassifierTests } from '../src/lib/scoring/__tests__/mark
 import { runAIProviderTests } from '../src/lib/ai/__tests__/aiProvider.test'
 import { runAIUseCasesTests } from '../src/lib/ai/__tests__/aiUseCases.test'
 import { runIntegrationJourneyTests } from '../src/lib/__tests__/integrationJourney.test'
+import { runWeightsValidationTests } from '../src/lib/validations/__tests__/weights.test'
 
 console.log('====================================================')
 console.log('   CITY LAUNCHPAD — COMPREHENSIVE TEST RUNNER')
@@ -22,6 +23,7 @@ async function main() {
     runMarketValidationMetricsTests()
     runMarketValidationSchemaTests()
     runMarketProofClassifierTests()
+    runWeightsValidationTests()
     await runAIProviderTests()
     await runAIUseCasesTests()
     await runIntegrationJourneyTests()
