@@ -37,6 +37,7 @@ export interface ScoringCriterionInput {
 export interface ScoringInput {
   criteria: ScoringCriterionInput[]
   startupContext?: StartupScoringContext
+  customWeights?: Record<string, number> // Optional custom weights for what-if ranking
 }
 
 export interface ScoringResult {
@@ -96,6 +97,18 @@ export const DEFAULT_CRITERIA: Array<{
 ]
 
 /**
+ * Default weights exported for what-if ranking feature.
+ * Keys match criterion names from DEFAULT_CRITERIA.
+ */
+export const DEFAULT_WEIGHTS: Record<string, number> = {
+  'Demand Fit': 25,
+  'Competitive Opportunity': 20,
+  'Distribution Feasibility': 20,
+  'Entry Cost & Unit Economics': 20,
+  'Operational Feasibility & Talent': 15,
+}
+
+/**
  * Computes a weighted, explainable Fit Score adhering to Phase 5 specification.
  *
  * Formula:
@@ -108,7 +121,7 @@ export const DEFAULT_CRITERIA: Array<{
  *   insufficient_data is flagged as true and total_score is returned as null.
  */
 export function computeFitScore(input: ScoringInput): ScoringResult {
-  const { criteria } = input
+  const { criteria, customWeights } = input
   const limitations: string[] = []
   const missing_criteria: string[] = []
 
@@ -134,7 +147,11 @@ export function computeFitScore(input: ScoringInput): ScoringResult {
   const processedCriteria: FitScoreCriterion[] = []
 
   for (const c of criteria) {
-    const validWeight = Math.max(0, Math.min(100, c.weight))
+    // Use custom weight if provided, otherwise use criterion's weight
+    const weightToUse = customWeights && customWeights[c.name] !== undefined 
+      ? customWeights[c.name] 
+      : c.weight
+    const validWeight = Math.max(0, Math.min(100, weightToUse))
     totalPossibleWeight += validWeight
 
     const isAvailable = c.is_available !== false && c.score !== undefined && c.score !== null
@@ -162,6 +179,27 @@ export function computeFitScore(input: ScoringInput): ScoringResult {
       score: parseFloat(validScore.toFixed(2)),
       rationale: c.rationale || 'Evaluated deterministically from sourced city market indicators.',
     })
+  }
+
+  // Guard against division by zero (all weights zero or all criteria missing)
+  if (eligibleWeightSum === 0) {
+    limitations.push('No eligible criteria with positive weight available for scoring.')
+    const coverageValue = criteria.length > 0 
+      ? ((criteria.length - missing_criteria.length) / criteria.length) * 100 
+      : 0
+    return {
+      criteria: processedCriteria,
+      total_score: null,
+      max_score: 100,
+      percentage: null,
+      scoring_model_version: SCORING_MODEL_VERSION,
+      evidence_coverage: parseFloat(coverageValue.toFixed(1)),
+      missing_criteria,
+      insufficient_data: true,
+      eligible_weight_sum: eligibleWeightSum,
+      total_possible_weight: totalPossibleWeight,
+      limitations,
+    }
   }
 
   // Calculate evidence coverage % (0 to 100)

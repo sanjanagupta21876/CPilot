@@ -11,6 +11,8 @@ import { runIntegrationJourneyTests } from '../src/lib/__tests__/integrationJour
 import { runSensitivityTests } from '../src/lib/scoring/__tests__/sensitivity.test'
 import { runPruneTests } from '../src/lib/ai/__tests__/prune.test'
 import { runBundleSecretCheck } from './check-bundle-secrets'
+import { runWeightsValidationTests } from '../src/lib/validations/__tests__/weights.test'
+import { runWhatIfRankingTests } from '../src/lib/scoring/__tests__/whatIfRanking.test'
 
 console.log('====================================================')
 console.log('   CITY LAUNCHPAD — COMPREHENSIVE TEST RUNNER')
@@ -26,6 +28,8 @@ async function main() {
     runMarketValidationMetricsTests()
     runMarketValidationSchemaTests()
     runMarketProofClassifierTests()
+    runWeightsValidationTests()
+    runWhatIfRankingTests()
     await runAIProviderTests()
     await runAIUseCasesTests()
     await runPruneTests()

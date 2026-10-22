@@ -275,5 +275,146 @@ export function runFitScoreTests() {
   }
 }
 
+// Golden Characterization Test - Baseline Scores for Sample Cities
+export function runGoldenCharacterizationTest() {
+  let passed = 0
+  let failed = 0
+
+  function assert(condition: boolean, testName: string, detail?: string) {
+    if (condition) {
+      console.log(`  ✓ ${testName}`)
+      passed++
+    } else {
+      console.error(`  ✗ ${testName}${detail ? `: ${detail}` : ''}`)
+      failed++
+    }
+  }
+
+  console.log('\n--- Running Golden Characterization Test (Baseline Scores) ---')
+
+  // Test with actual benchmark data from cityData.ts for Bengaluru
+  const bengaluruIndicators: MarketIndicator[] = [
+    {
+      id: 'blr-1',
+      comparison_id: 'golden',
+      city: 'Bengaluru',
+      indicator: 'Metro Population',
+      value: '13.6',
+      unit: 'Million',
+      source_name: 'MoHUA',
+      source_url: 'https://mohua.gov.in',
+      collected_at: '2024-01-15',
+      confidence: 'high',
+      notes: null,
+      created_at: '2024-01-15',
+    },
+    {
+      id: 'blr-2',
+      comparison_id: 'golden',
+      city: 'Bengaluru',
+      indicator: 'Per Capita Income',
+      value: '3,32,000',
+      unit: 'INR / Year',
+      source_name: 'Karnataka Economic Survey',
+      source_url: 'https://des.karnataka.gov.in',
+      collected_at: '2024-03-01',
+      confidence: 'high',
+      notes: null,
+      created_at: '2024-03-01',
+    },
+    {
+      id: 'blr-3',
+      comparison_id: 'golden',
+      city: 'Bengaluru',
+      indicator: 'UPI Digital Transaction Density',
+      value: '842',
+      unit: 'Transactions / Capita / Yr',
+      source_name: 'NPCI',
+      source_url: 'https://npci.org.in',
+      collected_at: '2024-06-30',
+      confidence: 'high',
+      notes: null,
+      created_at: '2024-06-30',
+    },
+    {
+      id: 'blr-4',
+      comparison_id: 'golden',
+      city: 'Bengaluru',
+      indicator: 'Recognized Startups',
+      value: '14,800+',
+      unit: 'DPIIT Entities',
+      source_name: 'DPIIT',
+      source_url: 'https://startupindia.gov.in',
+      collected_at: '2024-05-10',
+      confidence: 'high',
+      notes: null,
+      created_at: '2024-05-10',
+    },
+    {
+      id: 'blr-5',
+      comparison_id: 'golden',
+      city: 'Bengaluru',
+      indicator: 'Modern Trade / Supermarket Density',
+      value: '18.4',
+      unit: 'Outlets per 100k Population',
+      source_name: 'RAI',
+      source_url: 'https://rai.net.in',
+      collected_at: '2023-11-20',
+      confidence: 'medium',
+      notes: null,
+      created_at: '2023-11-20',
+    },
+    {
+      id: 'blr-6',
+      comparison_id: 'golden',
+      city: 'Bengaluru',
+      indicator: 'Commercial Office Rent Benchmark',
+      value: '85 - 110',
+      unit: 'INR / sq.ft / Month',
+      source_name: 'JLL',
+      source_url: 'https://jll.co.in',
+      collected_at: '2024-02-15',
+      confidence: 'medium',
+      notes: null,
+      created_at: '2024-02-15',
+    },
+  ]
+
+  const bengaluruCriteria = evaluateCityCriteria('Bengaluru', bengaluruIndicators)
+  const bengaluruScore = computeFitScore({ criteria: bengaluruCriteria })
+
+  // Golden baseline values - these must remain unchanged after refactor
+  // Actual computed score from current scorer: 76.45
+  // This is the authoritative baseline value to preserve
+
+  assert(
+    bengaluruScore.total_score === 76.45,
+    'Bengaluru baseline score matches golden value (76.45)',
+    `Got ${bengaluruScore.total_score}`
+  )
+  assert(
+    bengaluruScore.evidence_coverage === 100,
+    'Bengaluru has 100% evidence coverage'
+  )
+  assert(
+    bengaluruScore.insufficient_data === false,
+    'Bengaluru has sufficient data'
+  )
+
+  // Test tie-breaking behavior (will be implemented in refactor)
+  // For now, verify that identical inputs produce identical outputs
+  const duplicateRun = computeFitScore({ criteria: bengaluruCriteria })
+  assert(
+    duplicateRun.total_score === bengaluruScore.total_score,
+    'Deterministic reproducibility maintained'
+  )
+
+  console.log(`\nGolden Characterization: ${passed} passed, ${failed} failed.\n`)
+  if (failed > 0) {
+    process.exit(1)
+  }
+}
+
 // Run immediately if invoked as main script
 runFitScoreTests()
+runGoldenCharacterizationTest()
